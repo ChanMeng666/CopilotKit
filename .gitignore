@@ -25,3 +25,6 @@ __pycache__/
 *.env
 *.next
 .venv
+.vercel
+
+docs/next-env.d.ts

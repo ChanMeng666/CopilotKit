@@ -1,8 +1,9 @@
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ADKIcon, MastraIcon, LlamaIndexIcon, AG2Icon, AgnoIcon, PydanticAIIcon } from "@/lib/icons/custom-icons";
+import { ADKIcon, MastraIcon, LlamaIndexIcon, AG2Icon, AgnoIcon, PydanticAIIcon, AwsStrandsIcon, A2AIcon } from "@/lib/icons/custom-icons";
 import { SiCrewai } from "@icons-pack/react-simple-icons";
 import { SiLangchain } from "react-icons/si";
+import { FaMicrosoft } from "react-icons/fa";
 import { Brain } from "lucide-react";
 import { RocketIcon } from "lucide-react";
 
@@ -21,6 +22,34 @@ interface IntegrationCardProps {
 
 const integrations: Integration[] = [
   {
+    title: "Google ADK",
+    description: "ADK is a framework for building and deploying AI agents.",
+    logo: <ADKIcon className="w-8 h-8" />,
+    bgGradient: "bg-[#FF3C1A] text-white",
+    href: "/adk",
+  },
+  {
+    title: "A2A",
+    description: "A2A is a protocol for allowing agents to interact with each other.",
+    logo: <A2AIcon className="w-8 h-8 text-bold" />,
+    bgGradient: "bg-gradient-to-b from-orange-700 to-orange-400 text-orange-100",
+    href: "/a2a",
+  },
+  {
+    title: "Microsoft",
+    description: "Microsoft Agent Framework is a framework for building and deploying AI agents.",
+    logo: <FaMicrosoft className="w-8 h-8" />,
+    bgGradient: "bg-gradient-to-b from-blue-700 to-blue-400 text-blue-100",
+    href: "/microsoft-agent-framework",
+  },
+  {
+    title: "AWS Strands",
+    description: "AWS Strands is a framework for building and deploying AI agents.",
+    logo: <AwsStrandsIcon className="w-8 h-8" />,
+    bgGradient: "bg-black text-white",
+    href: "/aws-strands",
+  },
+  {
     title: "Direct to LLM",
     description: "Use CopilotKit directly with your LLM of choice. No framework required.",
     logo: <RocketIcon className="w-8 h-8" />,
@@ -35,39 +64,32 @@ const integrations: Integration[] = [
     href: "/coagents",
   },
   {
-    title: "Mastra",
-    description: "Mastra is a framework for building and deploying AI agents.",
-    logo: <MastraIcon className="w-8 h-8" />,
-    bgGradient: "bg-gradient-to-b from-black to-zinc-800 text-white",
-    href: "/mastra",
+    title: "Agno",
+    description: "Agno is a framework for building and deploying AI agents.",
+    logo: <AgnoIcon className="w-8 h-8" />,
+    bgGradient: "bg-[#FF3C1A] text-white",
+    href: "/agno",
   },
   {
-    title: "CrewAI Crews",
+    title: "AutoGen2",
+    description: "AutoGen2 is a framework for building and deploying AI agents.",
+    logo: <AG2Icon className="w-8 h-8 text-bold" />,
+    bgGradient: "bg-gradient-to-b from-indigo-700 to-indigo-400 text-indigo-100",
+    href: "/ag2",
+  },
+  {
+    title: "CrewAI - Crews",
     description: "CrewAI is a framework for building and deploying AI agents.",
     logo: <SiCrewai className="w-8 h-8" />,
     bgGradient: "bg-gradient-to-b from-[#FA694C] to-[#FE8A71] text-white",
     href: "/crewai-crews",
   },
   {
-    title: "CrewAI Flows",
+    title: "CrewAI - Flows",
     description: "CrewAI is a framework for building and deploying AI agents.",
     logo: <SiCrewai className="w-8 h-8" />,
     bgGradient: "bg-gradient-to-b from-[#FA694C] to-[#FE8A71] text-white",
     href: "/crewai-flows",
-  },
-  {
-    title: "ADK",
-    description: "ADK is a framework for building and deploying AI agents.",
-    logo: <ADKIcon className="w-8 h-8" />,
-    bgGradient: "bg-[#FF3C1A] text-white",
-    href: "/adk",
-  },
-  {
-    title: "Agno",
-    description: "Agno is a framework for building and deploying AI agents.",
-    logo: <AgnoIcon className="w-8 h-8" />,
-    bgGradient: "bg-[#FF3C1A] text-white",
-    href: "/agno",
   },
   {
     title: "LlamaIndex",
@@ -77,18 +99,18 @@ const integrations: Integration[] = [
     href: "/llamaindex",
   },
   {
+    title: "Mastra",
+    description: "Mastra is a framework for building and deploying AI agents.",
+    logo: <MastraIcon className="w-8 h-8" />,
+    bgGradient: "bg-gradient-to-b from-black to-zinc-800 text-white",
+    href: "/mastra",
+  },
+  {
     title: "Pydantic AI",
     description: "Pydantic AI is a framework for building and deploying AI agents.",
     logo: <PydanticAIIcon className="w-8 h-8 text-bold" />,
     bgGradient: "bg-[#ED2762] text-white",
     href: "/pydantic-ai",
-  },
-  {
-    title: "AutoGen2",
-    description: "AutoGen2 is a framework for building and deploying AI agents.",
-    logo: <AG2Icon className="w-8 h-8 text-bold" />,
-    bgGradient: "bg-gradient-to-b from-indigo-700 to-indigo-400 text-indigo-100",
-    href: "/ag2",
   },
   // Add more integrations here
 ];
@@ -170,6 +192,12 @@ const IntegrationsGrid: React.FC<IntegrationsGridProps> = ({ targetPage, suppres
   };
 
   let filteredIntegrations = integrations;
+
+  // Hide Microsoft Agent Framework from the integrations grid
+  // TODO: Remove this once Microsoft Agent Framework support is announced
+  filteredIntegrations = filteredIntegrations.filter((integration) => {
+    return !integration.title.toLowerCase().includes("microsoft");
+  });
 
   // Filter out Direct to LLM if suppressed
   if (suppressDirectToLLM) {

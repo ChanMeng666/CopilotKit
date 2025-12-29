@@ -4,22 +4,24 @@ import {
   frontmatterSchema,
   metaSchema,
 } from 'fumadocs-mdx/config';
+import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
 import {
   fileGenerator,
   remarkDocGen,
   remarkInstall,
-  typescriptGenerator,
 } from "fumadocs-docgen";
+import { remarkAutoTypeTable, createGenerator } from "fumadocs-typescript";
 import { rehypeCode } from "fumadocs-core/mdx-plugins";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
   transformerNotationWordHighlight,
-  // ...
 } from "@shikijs/transformers";
-import { remarkMermaid } from '@theguild/remark-mermaid'
+import { remarkMermaid } from '@theguild/remark-mermaid';
+
+const typeGenerator = createGenerator();
 
 // Extend the frontmatter schema to include hideHeader and hideTOC fields
 const extendedFrontmatterSchema = frontmatterSchema.extend({
@@ -39,15 +41,16 @@ export const docs = defineDocs({
 });
 
 export default defineConfig({
+  plugins: [lastModified()],
   mdxOptions: {
     rehypePlugins: [
       [
         rehypeCode,
         {
           transformers: [
-            transformerNotationDiff(),
-            transformerNotationHighlight(),
-            transformerNotationWordHighlight(),
+            transformerNotationDiff({ matchAlgorithm: "v3" }),
+            transformerNotationHighlight({ matchAlgorithm: "v3" }),
+            transformerNotationWordHighlight({ matchAlgorithm: "v3" }),
           ],
         },
       ],
@@ -55,7 +58,11 @@ export default defineConfig({
     remarkPlugins: [
       remarkMermaid,
       [remarkInstall, { persist: { id: "package-manager" } }],
-      [remarkDocGen, { generators: [typescriptGenerator(), fileGenerator()] }],
+      [remarkDocGen, { generators: [fileGenerator()] }],
+      [remarkAutoTypeTable, { generator: typeGenerator }],
     ],
+    remarkNpmOptions: {
+      persist: { id: "package-manager" },
+    },
   },
 });
